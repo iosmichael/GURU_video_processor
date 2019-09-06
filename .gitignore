@@ -3,4 +3,5 @@
 *.npy
 
 */pupil_data
+*/
 __pycache__

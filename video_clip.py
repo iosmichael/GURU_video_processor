@@ -66,7 +66,8 @@ if __name__ == '__main__':
                 # Display the resulting frame
                 data.append({
                     'norm_pos':gaze_pos[f_index]['norm_pos'],
-                    'confidence': gaze_pos[f_index]['confidence']
+                    'confidence': gaze_pos[f_index]['confidence'],
+                    'topic':gaze_pos[f_index]['topic']
                     })
                 writer.write(frame)
                 f_index += 1

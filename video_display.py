@@ -65,13 +65,18 @@ if __name__ == '__main__':
         if ret == True:
             norm_x, norm_y = gaze_pos[f_index]['norm_pos']
             conf = gaze_pos[f_index]['confidence']
+            topic = gaze_pos[f_index]['topic']
+            if conf < 0.8:
+                f_index += 1
+                continue
             f_index += 1
             gaze_x, gaze_y = norm_x * FRAME_WIDTH, norm_y * FRAME_HEIGHT
             # Display the resulting frame
             if conf < 0.5:
                 continue
 
-            cv2.putText(frame, "Conf: {}".format(np.round(conf * 100, decimals=2)), (10,height-20), cv2.FONT_HERSHEY_SIMPLEX, 0.75,(0,0,255),2)
+            cv2.putText(frame, "Conf: {}".format(np.round(conf * 100, decimals=2)), (10,FRAME_HEIGHT-20), cv2.FONT_HERSHEY_SIMPLEX, 0.75,(0,0,255),2)
+            cv2.putText(frame, "Topic: {}".format(topic), (10,20), cv2.FONT_HERSHEY_SIMPLEX, 0.75,(0,0,255),2)
             cv2.circle(frame, (int(gaze_x), int(gaze_y)), 12, (255,165,0), -1)
             cv2.imshow('Frame',frame)
             # Press Q on keyboard to  exit
