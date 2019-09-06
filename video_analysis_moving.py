@@ -10,7 +10,7 @@ JSON_FILE = 'calibration2.json'
 MOVIE_FILE = 'world_bucket2.mp4'
 GAZE_FILE = 'world_pupil_data_bucket2.npy'
 
-graph_alpha = 0.8
+graph_alpha = 0.6
 
 CENTRAL_RADIUS = 20
 BASE_COLOR = (50/255,205/255,50/255)
@@ -52,11 +52,16 @@ def get_fig_by_frame(categories, f_index, f_size):
 	ax = fig.add_subplot(111)
 	for k in categories.keys():
 		ax.plot(categories[k], label=k)
-		# print(categories[k])
-		# print(categories[k][f_index])
 	ax.legend()
+	ax.set_ylabel('Area %')
+	ax.spines['top'].set_visible(False)
+	ax.spines['right'].set_visible(False)
+	ax.spines['left'].set_visible(False)
+	ax.grid(axis='y')
+	[t.set_visible(False) for t in ax.get_xticklines()]
 	# draw vertical line
 	ax.axvline(x=f_index)
+	fig.tight_layout()
 	imfig = mplfig_to_npimage(fig)
 	plt.close(fig)
 	h, w, _ = imfig.shape
@@ -71,8 +76,8 @@ def main():
 	gaze_pos = np.load(os.path.join(FILE_DIR, GAZE_FILE), allow_pickle=True)
 	
 	categories, frames = load_graph_data(gaze_pos, tracks, (width, height))
-	plt.tight_layout()
-	size, _ = get_fig_by_frame(categories, 0, (width, 100))
+	plt.style.use('dark_background')
+	size, _ = get_fig_by_frame(categories, 0, (width-200, 150))
 	gh, gw = size
 	f_index = 0
 
@@ -94,14 +99,15 @@ def main():
 						if outside == "1":
 							continue
 						utils.draw_bbox(frame, bbox, id, '{} {}'.format(label, id))
-			cv2.putText(frame, "conf: {}".format(np.round(conf * 100, decimals=2)), (width-250, 10), cv2.FONT_HERSHEY_COMPLEX_SMALL, 0.8,(0, 255, 0),1)
-			cv2.putText(frame, "topic: {}".format(gaze_pos[f_index]['topic']), (width-250, 40), cv2.FONT_HERSHEY_COMPLEX_SMALL, 0.8,(0, 255, 0),1)
+
 			utils.transparent_circle(frame, (gaze_x, gaze_y), CENTRAL_RADIUS, (*BASE_COLOR, 0.8), -1)
 
-			_, imfig = get_fig_by_frame(categories, f_index, (width, 100))
-			frame[height-gh:, width-gw:,:] = imfig * graph_alpha + frame[height-gh:, width-gw:,:] * (1-graph_alpha)
-
-			# cv2.imshow('Frame',frame)
+			_, imfig = get_fig_by_frame(categories, f_index, (width-200, 150))
+			frame[height-gh:, :gw,:] = imfig * graph_alpha + frame[height-gh:, :gw,:] * (1-graph_alpha)
+			frame[height-gh:, gw:, :] = np.zeros((gh, width-gw, 3), np.uint8) * graph_alpha + frame[height-gh:, gw:, :] * (1-graph_alpha)
+			cv2.putText(frame, "conf: {}".format(np.round(conf * 100, decimals=2)), (width-180, height-80), cv2.FONT_HERSHEY_COMPLEX_SMALL, 0.8,(255, 255, 255),1)
+			cv2.putText(frame, "topic: {}".format(gaze_pos[f_index]['topic']), (width-180, height-40), cv2.FONT_HERSHEY_COMPLEX_SMALL, 0.8,(255, 255, 255),1)
+			cv2.imshow('Frame',frame)
 			writer.write(frame)
 			f_index += 1
 			if f_index >= length:
