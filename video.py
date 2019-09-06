@@ -33,7 +33,7 @@ if __name__ == '__main__':
     
     # cv2.namedWindow('Frame',cv2.WINDOW_NORMAL)
     # cv2.resizeWindow('Frame', width // 3 * 2, height // 3 * 2)
-    fourcc = cv2.VideoWriter_fourcc('M','P','E','G')
+    fourcc = cv2.VideoWriter_fourcc(*'XVID')
     writer = cv2.VideoWriter(os.path.join(args.data_folder, "world_annotated{}.avi".format(args.bucket)), fourcc, fps, (width, height))
     # Read until video is completed
     f_index = 0
@@ -43,7 +43,7 @@ if __name__ == '__main__':
         if ret == True:
             norm_x, norm_y = gaze_pos[f_index]['norm_pos']
             conf = gaze_pos[f_index]['confidence']
-            gaze_x, gaze_y = norm_x * width + 20, (1 - norm_y) * height + 20
+            gaze_x, gaze_y = norm_x * width, (1 - norm_y) * height
             # Display the resulting frame
             if frames:
                 if str(f_index) in frames.keys():
