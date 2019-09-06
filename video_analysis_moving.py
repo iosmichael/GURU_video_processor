@@ -52,6 +52,7 @@ def get_fig_by_frame(categories, f_index, f_size):
 	ax = fig.add_subplot(111)
 	for k in categories.keys():
 		ax.plot(categories[k], label=k)
+		ax.fill_between(np.arange(len(categories[k])), 0, categories[k], alpha=0.4)
 	ax.legend()
 	ax.set_ylabel('Area %')
 	ax.spines['top'].set_visible(False)
@@ -80,9 +81,11 @@ def main():
 	size, _ = get_fig_by_frame(categories, 0, (width-200, 150))
 	gh, gw = size
 	f_index = 0
+	cv2.namedWindow('Frame',cv2.WINDOW_NORMAL)
+	cv2.resizeWindow('Frame', width // 3 * 2, height // 3 * 2)
 
 	fourcc = cv2.VideoWriter_fourcc(*'XVID')
-	writer = cv2.VideoWriter(os.path.join(FILE_DIR, "world_annotated3_graph.avi"), fourcc, fps, (width, height))
+	writer = cv2.VideoWriter(os.path.join(FILE_DIR, "world_annotated3_graph.mp4"), fourcc, fps, (width, height))
 
 	while(cap.isOpened()):
 		# Capture frame-by-frame

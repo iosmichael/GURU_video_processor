@@ -31,11 +31,18 @@ def load_json(file_path):
 	return tracks
 
 def draw_bbox(img, bbox, id, label, col = (0, 255, 0)):
+
+	font = cv2.FONT_HERSHEY_COMPLEX_SMALL
+	offset_x, offset_y = 10, 5
+
+	bbox = [float(s) for s in bbox]
 	xtl, ytl, xbr, ybr = bbox
 	color = COLORS[int(id) % len(COLORS)]
-	xtl, ytl, xbr, ybr = float(xtl), float(ytl), float(xbr), float(ybr)
+	text_width, text_height = cv2.getTextSize(label, fontFace=font, fontScale=0.8, thickness=1)[0]
+
+	cv2.rectangle(img, (int(xtl), int(ytl - 2*offset_y - text_height)), (int(xtl + 2* offset_x + text_width), int(ytl)), color, -1)
+	cv2.putText(img,label, (int(xtl + offset_x), int(ytl - offset_y)), font, 0.8,(0,0,0))
 	cv2.rectangle(img, (int(xtl), int(ytl)), (int(xbr), int(ybr)), color, 2)
-	cv2.putText(img,label.upper(), (int(xtl),int(ytl)-10), cv2.FONT_HERSHEY_COMPLEX_SMALL, 1,(0,255,0))
 
 # input color: rgba(...)
 def transparent_circle(img, center, radius, color, thickness):
