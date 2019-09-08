@@ -6,7 +6,6 @@ MODES = ['video']
 # Data Options
 ROOT_DIR = './data'
 DATA_FOLDERS = ['outdoor_calibration_outside']
-
 # Parse Mode
 
 
