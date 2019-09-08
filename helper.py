@@ -74,7 +74,7 @@ def video_process(dir, video_path, tracks, gaze_pos):
 			frame[height-gh:, :gw,:] = imfig * config.GRAPH_ALPHA + frame[height-gh:, :gw,:] * (1-config.GRAPH_ALPHA)
 			frame[height-gh:, gw:, :] = np.zeros((gh, width-gw, 3), np.uint8) * config.GRAPH_ALPHA + frame[height-gh:, gw:, :] * (1-config.GRAPH_ALPHA)
 			cv2.putText(frame, "conf: {}".format(np.round(conf * 100, decimals=2)), (width-180, height-80), cv2.FONT_HERSHEY_COMPLEX_SMALL, 0.8,(255, 255, 255),1)
-			cv2.putText(frame, "topic: {}".format(gaze_pos[f_index]['topic']), (width-180, height-40), cv2.FONT_HERSHEY_COMPLEX_SMALL, 0.8,(255, 255, 255),1)
+			cv2.putText(frame, "model: {}".format(gaze_pos[f_index]['topic']), (width-180, height-40), cv2.FONT_HERSHEY_COMPLEX_SMALL, 0.8,(255, 255, 255),1)
 			# cv2.imshow('Frame',frame)
 			writer.write(frame)
 			f_index += 1
