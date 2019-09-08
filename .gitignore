@@ -1,7 +1,7 @@
+
+data/*
+__pycache__
+
 *.mp4
 *.avi
 *.npy
-
-*/pupil_data
-*/
-__pycache__
